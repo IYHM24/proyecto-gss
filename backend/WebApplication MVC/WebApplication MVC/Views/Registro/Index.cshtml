@@ -1,0 +1,73 @@
+﻿@model IEnumerable<WebApplication_MVC.Models.Registro>
+@{
+    ViewData["Title"] = "Registro generado del ejercicio 1.4";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <form method="post">
+    <div class=" w-100 d-flex justify-content-between align-items-center p-3 border shadow">
+        <div>
+            <h3>Registro alquileres</h3>
+        </div>
+        <div class="form-group">
+                <label for="fechaI"  class="control-label">fecha inicial</label>
+                <input id="fechaI" name="fechaI" type="date" runat="server" class="form-control"/>
+        </div>
+        <div class="form-group">
+                <label for="fechaF" class="control-label">fecha final</label>
+                <input id="fechaF" name="fechaF" type="date" runat="server" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-success d-block">Filtrar fecha</button>            
+        </div>
+    </div>
+    </form>
+
+    <div class="row mt-5">
+        @if (Model.Count()>0)
+        {
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <td>@Html.DisplayNameFor(m => m.cedula)</td>
+                        <td>@Html.DisplayNameFor(m => m.nombre)</td>
+                        <td>@Html.DisplayNameFor(m => m.Fecha_Alquiler)</td>
+                        <td>@Html.DisplayNameFor(m => m.Tiempo_Alquilado)</td>
+                        <td>@Html.DisplayNameFor(m => m.saldo)</td>
+                        <td>@Html.DisplayNameFor(m => m.placa)</td>
+                        <td>@Html.DisplayNameFor(m => m.marca)</td>
+                        @*<td>Acciones</td>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model)
+                    {
+                        <tr>
+                            <td>@item.cedula</td>
+                            <td>@item.nombre</td>
+                            <td>@item.Fecha_Alquiler</td>
+                            <td>@item.Tiempo_Alquilado</td>
+                            <td>@item.saldo</td>
+                            <td>@item.placa</td>
+                            <td>@item.marca</td>
+                            @*<td>
+                                <a asp-controller="Cliente" asp-action="Editar" asp-route-id="@item.id_cliente" class="btn btn-warning"> Editar</a>
+                                <a asp-controller="Cliente" asp-action="Editar" asp-route-id="@item.id_cliente" class="btn btn-danger"> Eliminar</a>
+                            </td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="container border h-50 text-cente align-text-center">
+                <p>No existen registros</p>
+            </div>
+                
+        }
+    </div>
+
+</div>
+

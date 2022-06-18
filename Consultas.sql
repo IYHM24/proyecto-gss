@@ -81,13 +81,6 @@ CREATE TABLE PAGOS(
   INSERT INTO ALQUILER(fecha, tiempo, valor_total, saldo, abono_inicial, devuelto, id_cliente, id_carro)
   VALUES  ('2022-04-07',10,70000, 0, 70000,1,6,1);
 
-  DELETE FROM ALQUILER WHERE devuelto = 1;
-  ALTER TABLE PAGOS DROP CONSTRAINT fk_alquiler;
-  ALTER TABLE ALQUILER DROP CONSTRAINT fk_cliente;
-  ALTER TABLE ALQUILER DROP CONSTRAINT fk_carro;
-
-  SELECT * FROM ALQUILER;
-
    /* Valores a pagos*/
   INSERT INTO PAGOS(fecha, valor, id_alquiler)
   VALUES  ('2022-06-12',1000000, 1);
@@ -206,3 +199,69 @@ ON
 	a.id_cliente = cl.id_cliente
 WHERE
 	cl.nombre = 'Carlos';
+
+/*PRocesos adicionales*/
+
+CREATE PROCEDURE RegistroProcess
+AS
+SELECT 
+	a.id_alquiler,
+	cl.cedula,
+	cl.nombre,
+	a.fecha AS Fecha_Alquiler,
+	a.tiempo AS Tiempo_Alquilado,
+	a.saldo,
+	c.placa,
+	c.marca
+FROM 
+	ALQUILER a
+INNER JOIN 
+	CARRO c
+ON 
+	c.id_carro = a.id_carro
+INNER JOIN
+	CLIENTE cl
+ON 
+	cl.id_cliente = a.id_cliente;
+
+EXECUTE RegistroProcess;
+
+CREATE PROCEDURE FiltrarFecha
+	@FechaI Date = NULL,
+	@FechaF Date = NULL
+AS
+SELECT 
+	a.id_alquiler,
+	cl.cedula,
+	cl.nombre,
+	a.fecha AS Fecha_Alquiler,
+	a.tiempo AS Tiempo_Alquilado,
+	a.saldo,
+	c.placa,
+	c.marca
+FROM 
+	ALQUILER a
+INNER JOIN 
+	CARRO c
+ON 
+	c.id_carro = a.id_carro
+INNER JOIN
+	CLIENTE cl
+ON 
+	cl.id_cliente = a.id_cliente
+WHERE 
+	a.fecha BETWEEN @FechaI AND @FechaF;
+
+FiltrarFecha '2022-01-01','2022-12-01';
+
+SELECT * FROM ALQUILER;
+
+CREATE PROCEDURE contador AS
+SELECT
+	1 AS Id,
+	(COUNT(a.id_alquiler))/DATEDIFF(DAY, MIN(a.fecha), MAX(a.fecha)) AS ventas_por_dia,
+	(COUNT(a.id_alquiler))/DATEDIFF(MONTH, MIN(a.fecha), MAX(a.fecha)) AS ventas_por_mes
+FROM
+alquiler a;
+
+EXECUTE contador;
